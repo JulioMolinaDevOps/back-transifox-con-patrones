@@ -97,6 +97,7 @@ app.use((req, res) => {
 
 // Permite enviar archivos al front-end como html,css, javascrip (no cambian)
 
-app.listen(process.env.PORT, () => {
-    console.log(`Aplicacion en linea Puerto ${process.env.PORT}`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Aplicacion en linea Puerto ${PORT}`);
 }); // Corre la aplicacion por el puerto 3000
