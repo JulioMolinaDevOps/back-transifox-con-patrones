@@ -81,22 +81,26 @@ app.use(UsuariosRoutes);
 app.use(AnualidadesRoutes);
 app.use(CapitalizacionRoutes);
 
-//(async () => {
-// await conectarProducer();
-//})();
 
 
 
-// Directorio Publico
-app.use(express.static('public'));
 
-app.use((req, res) => {
-    res.status(404).send('No se encontro tu pagina');
+// Ruta base (Render health check)
+app.get("/", (req, res) => {
+    res.json({
+        message: "🚀 Bienvenido a TransiFox Backend",
+        version: "1.0.0",
+        status: "Online",
+    });
 });
 
-// Permite enviar archivos al front-end como html,css, javascrip (no cambian)
+
+app.use((req, res) => {
+    res.status(404).json({ error: "No se encontró la ruta solicitada" });
+});
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Aplicacion en linea Puerto ${PORT}`);
-}); // Corre la aplicacion por el puerto 3000
+    console.log(`✅ Servidor TransiFox corriendo en puerto ${PORT}`);
+});
