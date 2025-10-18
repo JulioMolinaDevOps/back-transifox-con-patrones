@@ -14,11 +14,11 @@ module.exports = function (servicio) {
 
       try {
 
-         const { Monto,TasaInteres,Plazo,Tipo} = req.body;
+         const { Monto, TasaInteres, Plazo, Tipo } = req.body;
 
 
 
-         const Valor = await servicio.CalcularAmortizacion( Monto,TasaInteres,Plazo,Tipo);
+         const Valor = await servicio.CalcularAmortizacion(Monto, TasaInteres, Plazo, Tipo);
 
 
 
@@ -26,7 +26,8 @@ module.exports = function (servicio) {
 
       } catch (error) {
 
-         res.status(404).json(error);
+         console.error("❌ Error en CalcularAmortizacion:", error);
+         res.status(500).json({ error: error.message });
 
       }
 

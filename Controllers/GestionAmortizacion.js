@@ -6,7 +6,7 @@ const AmortizacionFactory = require('../Creacionales/FactoryMethod/AmortizacionF
 class ServicioAmortizacion {
     constructor(DB) {
         this.DB = DB;
-        this.cacheAmortizaciones = new Map(); // Guardar amortizaciones creadas
+        this.cacheAmortizaciones = new Map();
     }
 
     CalcularAmortizacion(Monto, TasaInteres, Plazo, Tipo) {
@@ -17,43 +17,39 @@ class ServicioAmortizacion {
         const director = new DirectorAmortizacion(builder);
         const resultado = director.construirRespuesta(Tipo, Monto, TasaInteres, Plazo, tabla);
 
-        // Guardar prototipo en memoria para clonaciones futuras
+        // Guardamos prototipo en memoria
         const prototipo = new AmortizacionPrototype(
             Tipo, Monto, TasaInteres, Plazo, resultado.tabla, resultado.resumen
         );
         this.cacheAmortizaciones.set(`${Tipo}-${Monto}-${TasaInteres}-${Plazo}`, prototipo);
 
-        return resultado;
+        // 🔥 Retornamos solo la lista
+        return resultado.tabla;
     }
 
-    // Nuevo método para clonar una amortización existente
     ClonarAmortizacion(claveExistente, nuevosDatos = {}) {
         const existente = this.cacheAmortizaciones.get(claveExistente);
-
-        if (!existente) {
-            return { error: "No existe una amortización con esa clave" };
-        }
+        if (!existente) return { error: "No existe una amortización con esa clave" };
 
         const clon = existente.clonar(nuevosDatos);
 
-        // Si hay cambios en el monto, tasa o plazo → recalcular tabla
         if (nuevosDatos.monto || nuevosDatos.tasa || nuevosDatos.plazo) {
             const estrategia = AmortizacionFactory.crear(
                 clon.tipo, clon.monto, clon.tasa, clon.plazo
             );
             const nuevaTabla = estrategia.calcular();
-
             const builder = new AmortizacionBuilder();
             const director = new DirectorAmortizacion(builder);
-            return director.construirRespuesta(clon.tipo, clon.monto, clon.tasa, clon.plazo, nuevaTabla);
+            const resultado = director.construirRespuesta(clon.tipo, clon.monto, clon.tasa, clon.plazo, nuevaTabla);
+            return resultado.tabla;
         }
 
-        // Si no hay cambios, devolver clon directo
-        return clon;
+        return clon.tabla || [];
     }
+
     async getHistorico() {
         try {
-            const sql = "select * from historico Where Disponible='SI'";
+            const sql = "SELECT * FROM historico WHERE Disponible='SI'";
             const result = await this.DB.Open(sql, []);
             return result.map(r => ({
                 Mes: r.mes,
