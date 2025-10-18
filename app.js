@@ -88,7 +88,7 @@ app.use(CapitalizacionRoutes);
 // Ruta base (Render health check)
 app.get("/", (req, res) => {
     res.json({
-        message: "🚀 Bienvenido a TransiFox Backend",
+        message: " Bienvenido a TransiFox Backend",
         version: "1.0.0",
         status: "Online",
     });

@@ -23,7 +23,7 @@ class ServicioAmortizacion {
         );
         this.cacheAmortizaciones.set(`${Tipo}-${Monto}-${TasaInteres}-${Plazo}`, prototipo);
 
-        // 🔥 Retornamos solo la lista
+        //  Retornamos solo la lista
         return resultado.tabla;
     }
 
