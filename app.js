@@ -17,7 +17,6 @@ const dbConfig = {
     database: process.env.DB_NAME
 };
 
-console.log(`Conectando a la base de datos ${dbType} en ${dbConfig.host}:${dbConfig.port}/${dbConfig.database} como usuario ${dbConfig.user} y contraseña ${dbConfig.password}  `);
 const DB = DBFactory.create(dbType, dbConfig);
 
 
